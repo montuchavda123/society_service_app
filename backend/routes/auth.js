@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Society = require('../models/Society');
+const { sendSocietyCodeEmail } = require('../services/emailService');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -50,6 +51,13 @@ router.post('/register', async (req, res) => {
         user.societyCode = finalSocietyCode;
         user.societyId = finalSocietyId;
         await user.save();
+
+        // 3. Send Email Notification with Society Code
+        // We do this asynchronously to avoid blocking the response
+        sendSocietyCodeEmail(user.email, user.name, finalSocietyCode, companyName || `${name}'s Society`)
+          .then(result => {
+             if(!result.success) console.error('Failed to send registration email:', result.error);
+          });
       }
 
       res.status(201).json({
