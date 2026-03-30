@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, Text, View, ActivityIndicator, Alert, ScrollView } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, Text, View, ActivityIndicator, Alert, ScrollView, Platform } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import Config from '../constants/Config';
 import { router } from 'expo-router';
@@ -37,11 +37,16 @@ export default function RegisterScreen() {
 
       const data = await response.json();
       if (response.ok) {
-        Alert.alert(
-          'Registration Successful',
-          data.message || 'You can now log in with your credentials.',
-          [{ text: 'OK', onPress: () => router.replace('/login') }]
-        );
+        if (Platform.OS === 'web') {
+          alert(`Registration Successful! ${data.message || 'You can now log in with your credentials.'}`);
+          router.replace('/login');
+        } else {
+          Alert.alert(
+            'Registration Successful',
+            data.message || 'You can now log in with your credentials.',
+            [{ text: 'OK', onPress: () => router.replace('/login') }]
+          );
+        }
       } else {
         Alert.alert('Registration Failed', data.message || 'Something went wrong');
       }

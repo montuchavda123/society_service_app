@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, Text, View, ActivityIndicator, Alert, ImageBackground } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, Text, View, ActivityIndicator, Alert, ImageBackground, Platform } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import Config from '../constants/Config';
 import { router } from 'expo-router';
@@ -26,7 +26,16 @@ export default function LoginScreen() {
 
       const data = await response.json();
       if (response.ok) {
-        await login(data);
+        if (Platform.OS === 'web') {
+          alert(`Login Successful! Welcome back, ${data.name}!`);
+          login(data);
+        } else {
+          Alert.alert(
+            'Login Successful',
+            `Welcome back, ${data.name}!`,
+            [{ text: 'Continue', onPress: () => login(data) }]
+          );
+        }
       } else {
         Alert.alert('Login Failed', data.message || 'Something went wrong');
       }
