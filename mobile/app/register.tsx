@@ -22,8 +22,28 @@ export default function RegisterScreen() {
   const { login } = useAuth();
 
   const handleRegister = async () => {
-    if (!name || !email || !password || (role !== 'Secretary' && !societyCode) || (role === 'Secretary' && !companyName)) {
-      Alert.alert('Error', 'Please fill in all required fields');
+    if (!name) {
+      Alert.alert('Error', 'Full Name is required');
+      return;
+    }
+    if (!email) {
+      Alert.alert('Error', 'Email address is required');
+      return;
+    }
+    if (!password) {
+      Alert.alert('Error', 'Password is required');
+      return;
+    }
+    if (!phone) {
+      Alert.alert('Error', 'Phone Number is required');
+      return;
+    }
+    if (role !== 'Secretary' && !societyCode) {
+      Alert.alert('Error', 'Society Code is required');
+      return;
+    }
+    if (role === 'Secretary' && !companyName) {
+      Alert.alert('Error', 'Company / Society Name is required');
       return;
     }
 

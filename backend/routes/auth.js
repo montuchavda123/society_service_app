@@ -21,13 +21,24 @@ router.post('/register', async (req, res) => {
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-    // 1. Create User first (so we have user._id)
+    // 1. For Members/Mechanics, find societyId from code
+    let initialSocietyId = null;
+    if (role !== 'Secretary' && societyCode) {
+      const society = await Society.findOne({ code: societyCode.toUpperCase() });
+      if (!society) {
+        return res.status(400).json({ message: 'Invalid Society Code' });
+      }
+      initialSocietyId = society._id;
+    }
+
+    // 2. Create User first (so we have user._id)
     const user = await User.create({
       name,
       email,
       password,
       role,
-      societyCode,
+      societyCode: role !== 'Secretary' ? societyCode?.toUpperCase() : undefined,
+      societyId: initialSocietyId,
       phone,
       companyName,
     });

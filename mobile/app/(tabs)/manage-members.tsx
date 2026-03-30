@@ -53,8 +53,24 @@ export default function ManageMembersScreen() {
 
   const handleSaveMember = async () => {
     const { name, email, phone, flatNumber, role } = formData;
-    if (!name || (!isEditing && !email)) {
-      Alert.alert('Required', 'Name and Email are required');
+    if (!name.trim()) {
+      Alert.alert('Required', 'Resident Name is required');
+      return;
+    }
+    if (!isEditing && !email.trim()) {
+      Alert.alert('Required', 'Email Address is required');
+      return;
+    }
+    if (!flatNumber.trim()) {
+      Alert.alert('Required', 'Flat / Unit Number is required');
+      return;
+    }
+    if (!phone.trim()) {
+      Alert.alert('Required', 'Phone Number is required');
+      return;
+    }
+    if (!role) {
+      Alert.alert('Required', 'User Role is required');
       return;
     }
 

@@ -11,8 +11,12 @@ export default function LoginScreen() {
   const { login } = useAuth();
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
+    if (!email) {
+      Alert.alert('Error', 'Email is required');
+      return;
+    }
+    if (!password) {
+      Alert.alert('Error', 'Password is required');
       return;
     }
 

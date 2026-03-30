@@ -88,8 +88,12 @@ export default function ComplaintScreen() {
   }
 
   const handleSubmit = async () => {
-    if (!title || !description) {
-      Alert.alert('Error', 'Please fill in title and description');
+    if (!title.trim()) {
+      Alert.alert('Error', 'Complaint Title is required');
+      return;
+    }
+    if (!description.trim()) {
+      Alert.alert('Error', 'Complaint Description is required');
       return;
     }
 
